@@ -52,7 +52,7 @@ module.exports = (sequelize, DataTypes) => {
       validate: {
         isDate: true,
         isValidDate(value) {
-          if (!isBefore(new Date(), new Date(value))){
+          if (!isBefore(new Date(value), new Date())){
             throw new Error('Error: Invalid date(date in future)');
           }
         }
