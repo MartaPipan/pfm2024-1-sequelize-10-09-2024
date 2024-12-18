@@ -79,6 +79,16 @@ module.exports.findAllUsersFemaleAndIdMenosCinco = async (req, res, next) => {
     }
 };
 
+module.exports.findUserByPk = async (req, res, next) => {
+    try {
+        const { params: { userId } } = req;
+        const user = await User.findByPk(userId)
+        return res.status(200).send({ data: user });
+    } catch (error) {
+        next(error);
+    }
+};
+
 
 
 

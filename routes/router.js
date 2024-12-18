@@ -1,12 +1,15 @@
 const { Router } = require('express');
-const { createUser, findAllUsers } = require('../controllers/user.controller');
+const { createUser, findAllUsers,findUserByPk} = require('../controllers/user.controller');
 
 const router = Router();
 
 // routing
 // http://localhost:3000/
 
-router.get('/users', findAllUsers);
+
 router.post('/users', createUser);
+router.get('/users', findAllUsers);
+router.get('/users/:userId', findUserByPk);
+
 
 module.exports = router;
