@@ -7,10 +7,10 @@ module.exports = {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
       },
       userId: {
-        field:'user_id',
+        field: 'user_id',
         allowNull: false,
         type: Sequelize.INTEGER,
         references: {
@@ -20,34 +20,34 @@ module.exports = {
           key: 'id',
         },
         onDelete: 'cascade',
-        onUpdate: 'restrict'
+        onUpdate: 'restrict',
       },
       content: {
         allowNull: false,
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
       },
       deadline: {
-        allowNull: false,
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
       },
       isDone: {
-        field:'is_done',
+        field: 'is_done',
         allowNull: false,
-        type: Sequelize.BOOLEAN
+        defaultValue: false,
+        type: Sequelize.BOOLEAN,
       },
       createdAt: {
-        field:'created_at',
+        field: 'created_at',
         allowNull: false,
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
       },
       updatedAt: {
-        field:'updated_at',
+        field: 'updated_at',
         allowNull: false,
-        type: Sequelize.DATE
-      }
+        type: Sequelize.DATE,
+      },
     });
   },
   async down(queryInterface, Sequelize) {
     await queryInterface.dropTable('tasks');
-  }
+  },
 };
