@@ -122,11 +122,17 @@ module.exports.deleteUserInstance = async (req, res, next) => {
 module.exports.updateUserByPkStatic = async (req, res, next) => {
     try {
         const { params: { userId }, body } = req;
+        const[,[updatedUser]] = await User.update(body, {  
+            where: { 'id': userId },
+            returning: true,
+        });
+        console.log('updatedUser static', updatedUser);
+        res.status(200).send({data:updatedUser});
     } catch (error) {
         next(error);
     }
-};
-
+};//const updatedUser return rows affected, not info about user  const updatedUser =[rows affected] doc.API->Model->static method update
+//const updatedUser return rows affected+info about user; we need info -> do destructing const[,[updatedUser]]
 module.exports.updateUserByPkInstance = async (req, res, next) => {
     try {
         const { params: { userId }, body } = req;
@@ -139,6 +145,8 @@ module.exports.updateUserByPkInstance = async (req, res, next) => {
         next(error);
     }
 };
+
+
 
 
 

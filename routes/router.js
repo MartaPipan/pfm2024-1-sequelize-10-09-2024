@@ -18,8 +18,8 @@ router.get('/users', findAllUsers);
 router.get('/users/:userId', findUserByPk);
 //router.delete('/users/:userId', deleteUserByPk);
 router.delete('/users/:userId', deleteUserInstance);
-router.patch('/users/:userId', updateUserByPkInstance);
-//router.put('/users/:userId', updateUserByPkStatic);
+//router.patch('/users/:userId', updateUserByPkInstance);
+router.patch('/users/:userId', updateUserByPkStatic);
 
 
 module.exports = router;
