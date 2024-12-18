@@ -44,7 +44,12 @@ module.exports = (sequelize, DataTypes) => {
     password: {
       field:'password_hash',
       allowNull: false,
-      type: DataTypes.TEXT
+      type: DataTypes.TEXT,
+       set(value) {
+      // Storing passwords in plaintext in the database is terrible.
+      // Hashing the value with an appropriate cryptographic hash function is better.
+      this.setDataValue('password', 'hash_password_' + value);
+    },
     },
     birthday: {
       allowNull: false,

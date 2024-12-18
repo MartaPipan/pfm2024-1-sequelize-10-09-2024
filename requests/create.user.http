@@ -5,7 +5,7 @@ Content-Type: application/json
     "firstName": "Mariana",
     "lastName":"Pit",
     "email":"marpit@gmail.com",
-    "password":" mnyuoiuhk", 
+    "password":" mnyuoiuhk@01", 
     "birthday":"1974-08-22",
     "isMale" : false
     }
