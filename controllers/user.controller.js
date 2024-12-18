@@ -89,6 +89,22 @@ module.exports.findUserByPk = async (req, res, next) => {
     }
 };
 
+//DROP ->delete table; TRUNCATE->delete rows
+module.exports.deleteUserByPk = async (req, res, next) => {
+    try {
+        const { params: { userId } } = req;
+        //const user = await User.findByPk(userId);     //se precisa recuperar info sobre user
+        const deletedUser = await User.destroy({
+            where: {'id': userId }
+        })
+        //return res.status(200).send({ data: user });  //se precisa recuperar info sobre user
+        return res.status(200).send('User deleted');
+        console.log({ data: deletedUser });
+        
+    } catch (error) {
+        next(error);
+    }
+};
 
 
 
