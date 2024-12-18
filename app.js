@@ -7,7 +7,7 @@ app.use(express.json());
 app.use('/', router);
 
 //handlerError
-app.use((err, req, res) => {
+app.use((err, req, res, next) => {
     console.log(err.message);
     res.status(500).send(err.message);
 });
