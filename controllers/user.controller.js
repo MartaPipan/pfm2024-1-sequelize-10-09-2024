@@ -119,6 +119,27 @@ module.exports.deleteUserInstance = async (req, res, next) => {
     }
 };
 
+module.exports.updateUserByPkStatic = async (req, res, next) => {
+    try {
+        const { params: { userId }, body } = req;
+    } catch (error) {
+        next(error);
+    }
+};
+
+module.exports.updateUserByPkInstance = async (req, res, next) => {
+    try {
+        const { params: { userId }, body } = req;
+        const userInstance = await User.findByPk(userId);
+        const updatedUser = await userInstance.update(body);
+        console.log('updatedUser instance', updatedUser);
+        
+        res.status(200).send({data:updatedUser});
+    } catch (error) {
+        next(error);
+    }
+};
+
 
 
 

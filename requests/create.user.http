@@ -2,11 +2,11 @@ POST http://localhost:3000/users/ HTTP/1.1
 Content-Type: application/json
 
 {
-    "firstName": "Luisa",
-    "lastName":"Rotsman",
-    "email":"rluisa@gmail.com",
-    "password":"odf@hk", 
-    "birthday":"1973-04-21",
+    "firstName": "Mariana",
+    "lastName":"Pit",
+    "email":"marpit@gmail.com",
+    "password":" mnyuoiuhk", 
+    "birthday":"1974-08-22",
     "isMale" : false
     }
  

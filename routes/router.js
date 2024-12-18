@@ -3,7 +3,9 @@ const { createUser,
     findAllUsers,
     findUserByPk,
     deleteUserByPk, 
-    deleteUserInstance} = require('../controllers/user.controller');
+    deleteUserInstance,
+    updateUserByPkInstance,
+    updateUserByPkStatic } = require('../controllers/user.controller');
 
 const router = Router();
 
@@ -16,5 +18,8 @@ router.get('/users', findAllUsers);
 router.get('/users/:userId', findUserByPk);
 //router.delete('/users/:userId', deleteUserByPk);
 router.delete('/users/:userId', deleteUserInstance);
+router.patch('/users/:userId', updateUserByPkInstance);
+//router.put('/users/:userId', updateUserByPkStatic);
+
 
 module.exports = router;
