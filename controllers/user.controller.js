@@ -110,11 +110,9 @@ module.exports.deleteUserInstance = async (req, res, next) => {
     try {
         const { params: { userId } } = req;
         const userInstance = await User.findByPk(userId);     //se precisa recuperar info sobre user
-        const userDeleted =await User.destroy({
-            where: {'id': userId }
-        })
+        const [userDeleted] =await userInstance.destroy()
         //return res.status(200).send({ data: user });  //se precisa recuperar info sobre user
-        return res.status(200).send({data:userDeleted, message:'User deleted'});
+        return res.status(200).send({data:userInstance, message:'User deleted'});
         
     } catch (error) {
         next(error);

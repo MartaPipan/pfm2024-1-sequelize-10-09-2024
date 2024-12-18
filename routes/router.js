@@ -14,7 +14,7 @@ const router = Router();
 router.post('/users', createUser);
 router.get('/users', findAllUsers);
 router.get('/users/:userId', findUserByPk);
-router.delete('/users/:userId', deleteUserByPk);
-//outer.delete('/users/:userId', deleteUserInstance);
+//router.delete('/users/:userId', deleteUserByPk);
+router.delete('/users/:userId', deleteUserInstance);
 
 module.exports = router;
