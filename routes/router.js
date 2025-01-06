@@ -1,11 +1,12 @@
 const { Router } = require('express');
-const { createUser,
-    findAllUsers,
-    findUserByPk,
-    deleteUserByPk, 
-    deleteUserInstance,
-    updateUserByPkInstance,
-    updateUserByPkStatic } = require('../controllers/user.controller');
+const {
+  createUser,
+  findAllUsers,
+  findUserByPk,
+  deleteUserByPk,
+  updateUserByPkInstance,
+  deleteUserInstance,
+  updateUserByPkStatic } = require('../controllers/user.controller');
 
     const {
   createTask,
@@ -15,6 +16,7 @@ const { createUser,
   deleteTask,
 } = require('../controllers/task.controller');
 
+const { checkUser } = require('../middlewares/user.mw')
 
 const router = Router();
 
@@ -24,16 +26,25 @@ const router = Router();
 
 router.post('/users', createUser);
 router.get('/users', findAllUsers);
-router.get('/users/:userId', findUserByPk);
-//router.delete('/users/:userId', deleteUserByPk);
-router.delete('/users/:userId', deleteUserInstance);
-//router.patch('/users/:userId', updateUserByPkInstance);
-router.patch('/users/:userId', updateUserByPkStatic);
+
+//router.get('/users/:userId',checkUser, findUserByPk);
+//router.delete('/users/:userId',checkUser, deleteUserByPk);
+//router.patch('/users/:userId', checkUser, updateUserByPkInstance);
+//router.delete('/users/:userId',checkUser, deleteUserInstance);
+//router.patch('/users/:userId',checkUser, updateUserByPkStatic);   ------>>>>>>
+
+router
+  .route('/users/:userId')
+  .all(checkUser)
+  .get(findUserByPk)
+  .delete(deleteUserByPk)
+  .patch(updateUserByPkInstance);
 
 
 
 
-router.post('/users/:userId/tasks', createTask);
+
+router.post('/users/:userId/tasks', checkUser, createTask);
 //router.get('/users/:userId/tasks', paginate, findAllTasks);
 
 //router.get('/users/:userId/tasks/:taskId', checkTask, findTask);

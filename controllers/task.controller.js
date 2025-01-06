@@ -3,6 +3,7 @@ const {Task} = require('../models');
 module.exports.createTask = async (req, res, next) => {
   try {
     const { body, params: { userId } } = req;
+    //check if user exists
     const newTask = await Task.create({ ...body, userId:userId });   //->doc.API->Model-> static method async create
     //console.log(newUser);
     if (newTask) {
