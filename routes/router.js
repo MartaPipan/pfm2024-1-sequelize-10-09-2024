@@ -45,7 +45,7 @@ router
 
 
 router.post('/users/:userId/tasks', checkUser, createTask);
-//router.get('/users/:userId/tasks', paginate, findAllTasks);
+router.get('/users/:userId/tasks', checkUser, findAllTasks);
 
 //router.get('/users/:userId/tasks/:taskId', checkTask, findTask);
 //router.patch('/users/:userId/tasks/:taskId', checkTask, updateTask);
