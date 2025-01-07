@@ -21,7 +21,7 @@ module.exports.findAllUsers = async (req, res, next) => {
             attributes: {
                 exclude: ['password', 'createdAt', 'updatedAt']
             },
-        })
+        });
         res.status(200).send({ data: allUsers });
     } catch (error) {
         next(error);
