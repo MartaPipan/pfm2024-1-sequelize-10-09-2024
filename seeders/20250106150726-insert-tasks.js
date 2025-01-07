@@ -14,11 +14,11 @@ module.exports = {
     //users = [{id:1},{id:2}, {id:3}, .....]
 
     const tasks = users.map((user) => {
-  return new Array(_.random(1, 10)) // генеруємо масив з випадковою кількістю елементів (від 1 до 10)
+  return new Array(_.random(1, 10, false)) // генеруємо масив з випадковою кількістю елементів (від 1 до 10)
     .fill(null)                     // заповнюємо масив значеннями `null`
     .map((task, i) => ({
       user_id: user.id,             // прив'язуємо задачу до конкретного користувача
-      content: `Content for task number(${i}) by user id = ${user.id}`, // зміст задачі
+      content: `Content for task number(${ i+1}) by user id = ${user.id}`, // зміст задачі
       deadline: new Date(),         // дедлайн — поточна дата
       is_done: false,               // задача не виконана
       created_at: new Date(),       // дата створення

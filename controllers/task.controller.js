@@ -21,6 +21,22 @@ module.exports.findAllTasks = async (req, res, next) => {
   }
 };
 
+module.exports.updateTask = async (req, res, next) => {
+  try {
+    const {
+      userInstance,
+      params: { taskId }
+    } = req;
+    const result = await userInstance.hasTask(taskId);
+    console.log(result);
+    res.status(200).send({ data: result})
+} catch (error) {
+ next(error);
+}
+};
+
+
+
 /**module.exports.createTask = async (req, res, next) => {
   try {
     const { body, params: { userId } } = req;

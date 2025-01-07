@@ -41,14 +41,11 @@ router
   .patch(updateUserByPkInstance);
 
 
-
-
-
 router.post('/users/:userId/tasks', checkUser, createTask);
 router.get('/users/:userId/tasks', checkUser, findAllTasks);
+router.patch('/users/:userId/tasks/:taskId', checkUser, updateTask);
 
 //router.get('/users/:userId/tasks/:taskId', checkTask, findTask);
-//router.patch('/users/:userId/tasks/:taskId', checkTask, updateTask);
 //router.delete('/users/:userId/tasks/:taskId', checkTask, deleteTask);
 
 
