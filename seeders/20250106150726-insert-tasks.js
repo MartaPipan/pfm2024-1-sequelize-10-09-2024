@@ -1,5 +1,5 @@
 'use strict';
-import _ from 'lodash';
+const _ = require ('lodash');
 //генерації випадкового числа задач для кожного користувача  _.random(1,10).
 
 const { User } = require('../models');
