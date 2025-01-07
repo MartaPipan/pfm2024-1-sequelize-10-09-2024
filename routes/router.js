@@ -40,13 +40,12 @@ router
   .delete(deleteUserByPk)
   .patch(updateUserByPkInstance);
 
-
+  
 router.post('/users/:userId/tasks', checkUser, createTask);
 router.get('/users/:userId/tasks', checkUser, findAllTasks);
+
+router.get('/users/:userId/tasks/:taskId', checkTask, findTask);
 router.patch('/users/:userId/tasks/:taskId', checkUser, updateTask);
-
-//router.get('/users/:userId/tasks/:taskId', checkTask, findTask);
-//router.delete('/users/:userId/tasks/:taskId', checkTask, deleteTask);
-
+router.delete('/users/:userId/tasks/:taskId', checkTask, deleteTask);
 
 module.exports = router;

@@ -25,11 +25,17 @@ module.exports.updateTask = async (req, res, next) => {
   try {
     const {
       userInstance,
-      params: { taskId }
+      params: { taskId },
+      body
     } = req;
-    const result = await userInstance.hasTask(taskId);
-    console.log(result);
-    res.status(200).send({ data: result})
+    //const result = await userInstance.hasTask(taskId);
+    //console.log(result);
+    const [taskInstance] = await userInstance.getTasks({ where: { id: taskId } });//hasMany->>method .get
+    if (!taskInstance) {
+      throw new Error('Task not found');
+    }
+    const task = await taskInstance.update(body);
+    res.status(200).send({ data: task})
 } catch (error) {
  next(error);
 }
