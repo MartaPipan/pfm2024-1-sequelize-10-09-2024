@@ -16,7 +16,8 @@ const {
   deleteTask,
 } = require('../controllers/task.controller');
 
-const { checkUser } = require('../middlewares/user.mw')
+const { checkUser } = require('../middlewares/user.mw');
+const { checkTask } = require('../middlewares/task.mw');
 
 const router = Router();
 
@@ -32,7 +33,7 @@ router.get('/users', findAllUsers);
 //router.patch('/users/:userId', checkUser, updateUserByPkInstance);
 //router.delete('/users/:userId',checkUser, deleteUserInstance);
 //router.patch('/users/:userId',checkUser, updateUserByPkStatic);   ------>>>>>>
-
+//------>>>>>>
 router
   .route('/users/:userId')
   .all(checkUser)
@@ -40,12 +41,12 @@ router
   .delete(deleteUserByPk)
   .patch(updateUserByPkInstance);
 
-  
+
 router.post('/users/:userId/tasks', checkUser, createTask);
 router.get('/users/:userId/tasks', checkUser, findAllTasks);
 
-router.get('/users/:userId/tasks/:taskId', checkTask, findTask);
-router.patch('/users/:userId/tasks/:taskId', checkUser, updateTask);
-router.delete('/users/:userId/tasks/:taskId', checkTask, deleteTask);
+router.get('/users/:userId/tasks/:taskId', checkUser, checkTask, findTask);
+router.patch('/users/:userId/tasks/:taskId', checkUser, checkTask, updateTask);
+router.delete('/users/:userId/tasks/:taskId', checkUser, checkTask, deleteTask);
 
 module.exports = router;

@@ -1,5 +1,6 @@
 const { Task } = require('../models');
-const {userInstance}= require('../middlewares/user.mw')
+const { userInstance } = require('../middlewares/user.mw');
+const { taskInstance } = require('../middlewares/task.mw');
 
 module.exports.createTask = async (req, res, next) => {
   try {
@@ -24,21 +25,33 @@ module.exports.findAllTasks = async (req, res, next) => {
 module.exports.updateTask = async (req, res, next) => {
   try {
     const {
-      userInstance,
-      params: { taskId },
+      taskInstance,
       body
     } = req;
-    //const result = await userInstance.hasTask(taskId);
-    //console.log(result);
-    const [taskInstance] = await userInstance.getTasks({ where: { id: taskId } });//hasMany->>method .get
-    if (!taskInstance) {
-      throw new Error('Task not found');
-    }
     const task = await taskInstance.update(body);
     res.status(200).send({ data: task})
 } catch (error) {
  next(error);
 }
+};
+
+module.exports.findTask = async (req, res, next) => {
+  try {
+    const {taskInstance} = req;
+    res.status(200).send({ data: taskInstance });
+  } catch (error) {
+    next(error);
+  }
+};
+
+module.exports.deleteTask = async (req, res, next) => {
+  try {
+    const { taskInstance } = req;
+    await taskInstance.destroy();
+    res.status(200).send({ data: taskInstance });
+  } catch (error) {
+    next(error);
+  }
 };
 
 
