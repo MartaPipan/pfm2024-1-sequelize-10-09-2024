@@ -1,4 +1,5 @@
 const { Op } = require('sequelize');    //Op ->operator: + = - */
+const createError = require('http-errors');
 const { User } = require('../models');
 const { userInstance } = require('../middlewares/user.mw');
 
@@ -8,9 +9,11 @@ module.exports.createUser = async (req, res, next) => {
       const { body } = req;
       const newUser = await User.create(body);
       console.log(newUser);
-      if (newUser) {
-          return res.status(201).send({ data: newUser });
+      if (!newUser) {
+          return next(createError(400, 'User not created, fixed your data'));
       }
+      res.status(201).send({ data: newUser });
+      
   } catch (error) {
       next(error); 
   }  
@@ -54,6 +57,9 @@ module.exports.updateUserByPkInstance = async (req, res, next) => {
     try {
         const { userInstance, body } = req;
         const updatedUser = await userInstance.update(body);
+        if (!updatedUser) {
+            return next(createError(400, 'User not updated, fixed your data'));
+        }
         res.status(200).send({data:updatedUser});
     } catch (error) {
         next(error);
@@ -199,19 +205,26 @@ module.exports.updateUserByPkInstance = async (req, res, next) => {
 //};
 
 
-//module.exports.updateUserByPkStatic = async (req, res, next) => {
-//    try {
-//        const { params: { userId }, body } = req;
-//        const[,[updatedUser]] = await User.update(body, {  
-//            where: { 'id': userId },
-//            returning: true,
-//        });
-//        console.log('updatedUser static', updatedUser);
-//        res.status(200).send({data:updatedUser});
-//    } catch (error) {
-//        next(error);
-//    }
-//};//const updatedUser return rows affected, not info about user  const updatedUser =[rows affected] doc.API->Model->static method update
+module.exports.updateUserByPkStatic = async (req, res, next) => {
+    try {
+        const
+            { params:
+                { userId },
+                body
+            } = req;
+        const [, [updatedUser]] = await User.update(body, {
+            where: { 'id': userId },
+            returning: true,
+        });
+        if (!updatedUser) {
+            return next(createError(400, 'User not updated, fixed your data'));
+        }
+        console.log('updatedUser static', updatedUser);
+        res.status(200).send({data:updatedUser});
+    } catch (error) {
+        next(error);
+    }
+};//const updatedUser return rows affected, not info about user  const updatedUser =[rows affected] doc.API->Model->static method update
 //const updatedUser return rows affected+info about user; we need info -> do destructing const[,[updatedUser]]
 
 

@@ -1,3 +1,4 @@
+const createError = require('http-errors');
 const { User } = require('../models');
 
 module.exports.checkTask = async (req, res, next) => {
@@ -9,7 +10,8 @@ module.exports.checkTask = async (req, res, next) => {
         } = req;
         const [taskInstance] = await userInstance.getTasks({ where: { id: taskId } });//hasMany>>method .get
     if (!taskInstance) {
-      throw new Error('Task not found');
+        //throw new Error('Task not found');
+        return next(createError(404, 'Task not found'));
     }
         req.taskInstance = taskInstance;
         next();
