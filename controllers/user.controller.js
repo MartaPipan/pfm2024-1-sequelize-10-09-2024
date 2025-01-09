@@ -24,7 +24,7 @@ module.exports.findAllUsers = async (req, res, next) => {
         const {pagination} = req;
         const allUsers = await User.findAll({
             attributes: {
-                exclude: ['password', 'createdAt', 'updatedAt']
+                exclude: ['password', 'createdAt', 'updatedAt'] // Виключаємо тільки непотрібні поля
             },
             ...pagination
         });

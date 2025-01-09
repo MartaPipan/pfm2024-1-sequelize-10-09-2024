@@ -1,6 +1,6 @@
 const constants = {
     LIMIT: {
-        MIN: 3,
+        MIN: 1,
         MAX: 12,
     },
 };

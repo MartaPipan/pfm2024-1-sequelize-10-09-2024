@@ -8,7 +8,10 @@ module.exports.createTask = async (req, res, next) => {
   try {
     const { body, userInstance } = req;
     const newTask = await userInstance.createTask(body);// ->doc.API->Model->magic method createChild
-      res.status(201).send({ data: newTask });
+     if (!newTask) {
+  return next(createError(400, 'Task could not be created.'));
+} 
+    res.status(201).send({ data: newTask });
   } catch (error) {
     next(error);
   }
@@ -17,10 +20,42 @@ module.exports.createTask = async (req, res, next) => {
 module.exports.findAllTasks = async (req, res, next) => {
   try {
     const { userInstance } = req; // отримуємо userInstance з middleware
-    const tasks = await userInstance.getTasks(); // отримуємо всі завдання користувача
+    const { pagination } = req;
+
+    const totalTasks = await userInstance.countTasks(); // Contar o total de tarefas do usuário
+     if (pagination.offset >= totalTasks) {
+      return res.status(404).send({
+        message: "The user does not have enough tasks to display this page.",
+        page: Math.ceil(pagination.offset / pagination.limit) + 1, // Página solicitada
+        availablePages: Math.ceil(totalTasks / pagination.limit), // Páginas disponíveis
+        totalTasks: totalTasks,
+      });
+    }
+    const tasks = await userInstance.getTasks({
+      attributes: {
+        exclude: ['createdAt', 'updatedAt']  // Виключаємо зайві поля
+      },
+      ...pagination // Параметри пагінації: limit та offset
+    }); // отримуємо всі завдання користувача
+
+/**const tasks = await userInstance.getTasks({
+  attributes: ['id', 'content', 'deadline', 'isDone'],
+  offset: pagination.offset,
+  limit: pagination.limit,
+});
+ */
+
+     // Verificar se nenhuma tarefa foi encontrada
+    if (!tasks || tasks.length === 0) {
+      return res.status(404).send({
+        message: "The user has no tasks available."
+      });
+    }
+  
     res.status(200).send({ data: tasks }); 
+    
   } catch (error) {
-    next(error);
+    next(error);// Передаємо помилку до handlerErrors
   }
 };
 
