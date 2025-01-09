@@ -1,4 +1,5 @@
 'use strict';
+
 const {Model} = require('sequelize');
 const {isBefore} = require('date-fns');
 module.exports = (sequelize, DataTypes) => {
@@ -7,6 +8,10 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
       User.hasMany(models.Task, {
+        foreignKey: 'userId'
+      });
+      User.belongsToMany(models.Group, {
+        through: 'users_to_groups',
         foreignKey: 'userId'
       });
     } 
