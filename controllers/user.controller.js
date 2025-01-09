@@ -1,7 +1,7 @@
 const { Op } = require('sequelize');    //Op ->operator: + = - */
 const { User } = require('../models');
 const { userInstance } = require('../middlewares/user.mw');
-const {pagination} = require('../middlewares/pagination.mw');   
+
 
 module.exports.createUser = async (req, res, next) => {
   try {

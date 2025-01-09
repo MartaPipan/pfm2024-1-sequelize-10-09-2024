@@ -1,7 +1,7 @@
 const constants = require('../constants');
 const { LIMIT } = constants;
 
-module.exports.pagination = async (req, res, next) => {
+module.exports.paginate = async (req, res, next) => {
     try {
         const {
             query: { page, amount },

@@ -1,6 +1,4 @@
 const { Router } = require('express');
-const { checkUser } = require('../middlewares/user.mw');
-const { pagination } = require('../middlewares/pagination.mw');
 
 const {
     createUser,
@@ -12,10 +10,13 @@ const {
     updateUserByPkStatic
 } = require('../controllers/user.controller');
 
+const { checkUser } = require('../middlewares/user.mw');
+const { paginate } = require('../middlewares/paginate.mw');
+
 const userRouter = Router();
 
 userRouter.post('/', createUser);
-userRouter.get('/',pagination, findAllUsers);
+userRouter.get('/',paginate, findAllUsers);
 
 userRouter 
   .route('/:userId')
