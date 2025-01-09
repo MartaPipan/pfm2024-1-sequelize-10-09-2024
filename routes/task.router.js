@@ -1,5 +1,6 @@
 const { Router } = require('express');
 const { checkTask } = require('../middlewares/task.mw');
+const { pagination } = require('../middlewares/pagination.mw');
 
 const {
     createTask,
@@ -12,7 +13,7 @@ const {
 const taskRouter = Router();
 
 taskRouter.post('/', createTask);
-taskRouter.get('/', findAllTasks);
+taskRouter.get('/',pagination, findAllTasks);
 
 taskRouter.get('/:taskId', checkTask, findTask);
 taskRouter.patch('/:taskId', checkTask, updateTask);

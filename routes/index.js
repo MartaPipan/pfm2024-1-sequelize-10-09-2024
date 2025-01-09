@@ -1,7 +1,6 @@
 const { Router } = require('express');
 
-const { checkUser } = require('../middlewares/user.mw');
-const { checkTask } = require('../middlewares/task.mw');
+const { checkUser } = require('../middlewares/user.mw');  
 
 const userRouter = require('./user.router');
 const taskRouter = require('./task.router');

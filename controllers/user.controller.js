@@ -1,6 +1,7 @@
 const { Op } = require('sequelize');    //Op ->operator: + = - */
 const { User } = require('../models');
-const {userInstance} = require('../middlewares/user.mw')
+const { userInstance } = require('../middlewares/user.mw');
+const {pagination} = require('../middlewares/pagination.mw');   
 
 module.exports.createUser = async (req, res, next) => {
   try {
@@ -17,10 +18,12 @@ module.exports.createUser = async (req, res, next) => {
 
 module.exports.findAllUsers = async (req, res, next) => {
     try {
+        const {pagination} = req;
         const allUsers = await User.findAll({
             attributes: {
                 exclude: ['password', 'createdAt', 'updatedAt']
             },
+            ...pagination
         });
         res.status(200).send({ data: allUsers });
     } catch (error) {
