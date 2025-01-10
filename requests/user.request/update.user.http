@@ -1,8 +1,9 @@
-PATCH  http://localhost:3000/users/10 HTTP/1.1
+PATCH  http://localhost:3000/users/11 HTTP/1.1
 Content-Type: application/json
 
 {
-    "lastName":"Growerer",
-    "email":"marigrowerer@gmail.com"
+    "firstName":"Brad",
+    "lastName":"Pitterson",
+    "email":"pitterson@gmail.com"
     }
  

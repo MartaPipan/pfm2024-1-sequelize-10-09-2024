@@ -2,12 +2,11 @@ POST http://localhost:3000/users/ HTTP/1.1
 Content-Type: application/json
 
 {
-    "firstName": "Marty",
-    "lastName":"Francis",
-    "email":"fry@gmail.com",
-    "password":" jkidt@01", 
-    "birthday":"1972-03-23",
-    "isMale" : true,
-    "prop":"; DROP users();"
+    "firstName": "Brad",
+    "lastName":"Kolpenesa",
+    "email":"kolpbrsaad@gmail.com",
+    "password":" jkbrakold@01", 
+    "birthday":"1972-01-27",
+    "isMale" : true
     }
  

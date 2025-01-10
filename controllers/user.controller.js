@@ -21,6 +21,9 @@ module.exports.createUser = async (req, res, next) => {
       if (!newUser) {
           return next(createError(400, 'User not created, fixed your data'));
       }
+      console.log('newUser instance------', newUser); 
+      newUser.dataValues.password = undefined;
+      
       res.status(201).send({ data: newUser });
       
   } catch (error) {
@@ -46,7 +49,7 @@ module.exports.findAllUsers = async (req, res, next) => {
 module.exports.findUserByPk = async (req, res, next) => {
     try {
         const { userInstance } = req;
-        userInstance.password = undefined; //don't send password
+        userInstance.dataValues.password = undefined; //don't send password
         res.status(200).send({ data: userInstance });
     } catch (error) {
         next(error);
@@ -55,8 +58,8 @@ module.exports.findUserByPk = async (req, res, next) => {
 module.exports.deleteUserByPk = async (req, res, next) => {
     try {
         const { userInstance } = req;
+        userInstance.dataValues.password = undefined; //don't send password
         const result = await userInstance.destroy();
-        userInstance.password = undefined;
         return res.status(200).send({message:'User deleted: ', data: userInstance });
     } catch (error) {
         next(error);
@@ -70,6 +73,7 @@ module.exports.updateUserByPkInstance = async (req, res, next) => {
         if (!updatedUser) {
             return next(createError(400, 'User not updated, fixed your data'));
         }
+        updatedUser.dataValues.password = undefined; //don't send password
         res.status(200).send({data:updatedUser});
     } catch (error) {
         next(error);
@@ -92,6 +96,7 @@ module.exports.updateUserByPkStatic = async (req, res, next) => {
             return next(createError(400, 'User not updated, fixed your data'));
         }
         console.log('updatedUser static', updatedUser);
+        updatedUser.dataValues.password = undefined; //don't send password
         res.status(200).send({data:updatedUser});
     } catch (error) {
         next(error);
