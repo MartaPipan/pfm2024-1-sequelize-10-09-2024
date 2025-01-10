@@ -1,13 +1,18 @@
 const createError = require('http-errors'); 
+const_ = require('lodash');
 
-const { Task } = require('../models');
-const { userInstance } = require('../middlewares/user.mw');
-const { taskInstance } = require('../middlewares/task.mw');
+const attributes = [
+  'content',
+  'deadline',
+  'isDone'
+];
+
 
 module.exports.createTask = async (req, res, next) => {
   try {
     const { body, userInstance } = req;
-    const newTask = await userInstance.createTask(body);// ->doc.API->Model->magic method createChild
+    const values = _.pick(body, attributes);
+    const newTask = await userInstance.createTask(values);// ->doc.API->Model->magic method createChild
      if (!newTask) {
   return next(createError(400, 'Task could not be created.'));
 } 
@@ -65,7 +70,8 @@ module.exports.updateTask = async (req, res, next) => {
       taskInstance,
       body
     } = req;
-    const task = await taskInstance.update(body);
+    const values = _.pick(body, attributes);
+    const task = await taskInstance.update(values);
     res.status(200).send({ data: task})
 } catch (error) {
  next(error);
@@ -102,6 +108,16 @@ module.exports.deleteTask = async (req, res, next) => {
     if (newTask) {
       res.status(201).send({ data: newTask });
     }
+  } catch (error) {
+    next(error);
+  }
+};
+
+module.exports.findAllTasksOutPagination = async (req, res, next) => {
+  try {
+    const{userInstance} = req;
+    const tasks = await userInstance.getTasks();
+    res.status(200).send({ data: tasks });
   } catch (error) {
     next(error);
   }
