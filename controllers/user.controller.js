@@ -40,6 +40,9 @@ module.exports.findAllUsers = async (req, res, next) => {
             },
             ...pagination
         });
+        if (!allUsers) {
+            return next(createError(404, 'Users not found.'));
+        }
         res.status(200).send({ data: allUsers });
     } catch (error) {
         next(error);
@@ -50,6 +53,9 @@ module.exports.findUserByPk = async (req, res, next) => {
     try {
         const { userInstance } = req;
         userInstance.dataValues.password = undefined; //don't send password
+        if (!userInstance) {
+            return next(createError(404, 'User not found.'));
+        }
         res.status(200).send({ data: userInstance });
     } catch (error) {
         next(error);
@@ -60,6 +66,9 @@ module.exports.deleteUserByPk = async (req, res, next) => {
         const { userInstance } = req;
         userInstance.dataValues.password = undefined; //don't send password
         const result = await userInstance.destroy();
+        if (!result) {
+            return next(createError(404, 'User not found.'));
+        }
         return res.status(200).send({message:'User deleted: ', data: userInstance });
     } catch (error) {
         next(error);

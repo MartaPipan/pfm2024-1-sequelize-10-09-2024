@@ -72,6 +72,9 @@ module.exports.updateTask = async (req, res, next) => {
     } = req;
     const values = _.pick(body, attributes);
     const task = await taskInstance.update(values);
+    if (!task) {
+      return next(createError(400, 'Task could not be updated.'));
+    }
     res.status(200).send({ data: task})
 } catch (error) {
  next(error);
@@ -80,7 +83,10 @@ module.exports.updateTask = async (req, res, next) => {
 
 module.exports.findTask = async (req, res, next) => {
   try {
-    const {taskInstance} = req;
+    const { taskInstance } = req;
+    if (!taskInstance) {
+      return next(createError(404, 'Task not found.'));
+    }
     res.status(200).send({ data: taskInstance });
   } catch (error) {
     next(error);
@@ -91,6 +97,9 @@ module.exports.deleteTask = async (req, res, next) => {
   try {
     const { taskInstance } = req;
     await taskInstance.destroy();
+    if (!taskInstance) {
+      return next(createError(404, 'Task not found.'));
+    }
     res.status(200).send({ data: taskInstance });
   } catch (error) {
     next(error);
