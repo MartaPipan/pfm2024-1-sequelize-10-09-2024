@@ -109,13 +109,23 @@ module.exports.getGroup = async (req, res, next) => {
 module.exports.addUserToGroup = async (req, res, next) => {
     try {
         const { userInstance, groupInstance, body } = req;
+        // Перевіряємо, чи є userInstance учасником групи, лише користувачі, які вже є частиною групи, можуть додавати інших користувачів до тієї ж групи
+        const isMember = await groupInstance.hasUser(userInstance.id);
+        if (!isMember) {
+            return next(createError(403, 'You must be a member of the group to add other users.'));
+        }
+        // Якщо передано поле idUser у запиті
         if (body.idUser) {
+            // Знаходимо користувача в базі даних за його ID
             const user = await User.findByPk(body.idUser);
             if (!user) {
+                // Якщо користувача з таким ID не знайдено, повертаємо помилку з кодом 404
                 return next(createError(404, 'User not found'));
             }
+            // Додаємо знайденого користувача до групи
             await groupInstance.addUser(body.idUser);
         } else {
+            // Якщо поле idUser у запиті не передано, додаємо користувача до групи
             await groupInstance.addUser(userInstance.id);
         }
         res.status(201).send({ data: 'add user to group success' });
@@ -124,4 +134,87 @@ module.exports.addUserToGroup = async (req, res, next) => {
     }
 };
 
+module.exports.deleteGroupWithOnlyMember = async (req, res, next) => {
+    try {
+        const { groupInstance, userInstance } = req;
+
+        // Отримуємо кількість користувачів у групі
+        const userCount = await groupInstance.countUsers();
+
+        // Перевіряємо, чи користувач єдиний, і чи він створив групу
+        if (userCount === 1 && (await groupInstance.hasUser(userInstance.id))) {
+            await groupInstance.destroy();
+            return res.status(200).send({ message: 'Group deleted as the owner was the only member.' });
+        }
+
+        return res.status(400).send({ message: 'Group cannot be deleted because there are other members.' });
+    } catch (error) {
+        next(error);
+    }
+};
+
+module.exports.userLeaveGroup = async (req, res, next) => {
+    try {
+        const { groupInstance, userInstance } = req;
+
+        // Видаляємо користувача з групи
+        await groupInstance.removeUser(userInstance.id);
+
+        // Перевіряємо кількість користувачів, які залишились
+        const remainingUserCount = await groupInstance.countUsers();
+
+        if (remainingUserCount === 0) {
+            // Якщо більше користувачів немає, видаляємо групу
+            await groupInstance.destroy();
+            return res.status(200).send({ message: 'User has been removed, and the group was deleted because it no longer has any members.' });
+        }
+
+        res.status(200).send({ message: 'User has left the group successfully.' });
+    } catch (error) {
+        next(error);
+    }
+};
+
  
+/**method deleteGroupWithOnlyMember and userLeaveGroup used method .getUsers();
+ * 
+ * module.exports.deleteGroupWithOnlyMember = async (req, res, next) => {
+    try {
+        const { groupInstance, userInstance } = req;
+
+        // Отримуємо всіх користувачів, які належать до групи
+        const users = await groupInstance.getUsers();
+
+        // Якщо тільки один користувач (той, хто створив групу)
+        if (users.length === 1) {
+            await groupInstance.destroy();
+            return res.status(200).send({ message: 'Group deleted as the owner was the only member.' });
+        }
+
+        return res.status(400).send({ message: 'Group cannot be deleted because there are other members.' });
+    } catch (error) {
+        next(error);
+    }
+};   
+
+module.exports.userLeaveGroup = async (req, res, next) => {
+    try {
+        const { groupInstance, userInstance } = req;
+
+        // Видаляємо користувача з групи
+        await groupInstance.removeUser(userInstance.id);
+
+        // Перевіряємо, чи залишились інші користувачі у групі
+        const remainingUsers = await groupInstance.getUsers();
+
+        if (remainingUsers.length === 0) {
+            // Якщо жодного користувача не залишилось, видаляємо групу
+            await groupInstance.destroy();
+            return res.status(200).send({ message: 'User has been removed, and the group was deleted because it no longer has any members.' });
+        }
+
+        res.status(200).send({ message: 'User has left the group successfully.' });
+    } catch (error) {
+        next(error);
+    }
+};*/

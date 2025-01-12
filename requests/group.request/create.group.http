@@ -1,6 +1,6 @@
-POST http://localhost:3000/users/2/groups HTTP/1.1
+POST http://localhost:3000/users/41/groups HTTP/1.1
 Content-Type: application/json
 
 {
-    "name": "group-by-user-2"
+    "name": "New group-by-user 41"
 }
