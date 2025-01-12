@@ -141,8 +141,8 @@ module.exports.deleteGroupWithOnlyMember = async (req, res, next) => {
         // Отримуємо кількість користувачів у групі
         const userCount = await groupInstance.countUsers();
 
-        // Перевіряємо, чи користувач єдиний, і чи він створив групу
-        if (userCount === 1 && (await groupInstance.hasUser(userInstance.id))) {
+        // Перевіряємо, чи користувач єдиний,iнакше видаляємо групу
+        if (userCount === 1) {
             await groupInstance.destroy();
             return res.status(200).send({ message: 'Group deleted as the owner was the only member.' });
         }
