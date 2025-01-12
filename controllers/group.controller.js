@@ -134,26 +134,8 @@ module.exports.addUserToGroup = async (req, res, next) => {
     }
 };
 
-module.exports.deleteGroupWithOnlyMember = async (req, res, next) => {
-    try {
-        const { groupInstance, userInstance } = req;
 
-        // Отримуємо кількість користувачів у групі
-        const userCount = await groupInstance.countUsers();
-
-        // Перевіряємо, чи користувач єдиний,iнакше видаляємо групу
-        if (userCount === 1) {
-            await groupInstance.destroy();
-            return res.status(200).send({ message: 'Group deleted as the owner was the only member.' });
-        }
-
-        return res.status(400).send({ message: 'Group cannot be deleted because there are other members.' });
-    } catch (error) {
-        next(error);
-    }
-};
-
-module.exports.userLeaveGroup = async (req, res, next) => {
+module.exports.deleteOrLeaveGroup =  async (req, res, next) => {
     try {
         const { groupInstance, userInstance } = req;
 
@@ -174,7 +156,24 @@ module.exports.userLeaveGroup = async (req, res, next) => {
         next(error);
     }
 };
+/**module.exports.deleteGroupWithOnlyMember = async (req, res, next) => {
+    try {
+        const { groupInstance, userInstance } = req;
 
+        // Отримуємо кількість користувачів у групі
+        const userCount = await groupInstance.countUsers();
+
+        // Перевіряємо, чи користувач єдиний,iнакше видаляємо групу
+        if (userCount === 1) {
+            await groupInstance.destroy();
+            return res.status(200).send({ message: 'Group deleted as the owner was the only member.' });
+        }
+
+        return res.status(400).send({ message: 'Group cannot be deleted because there are other members.' });
+    } catch (error) {
+        next(error);
+    }
+};*/
  
 /**method deleteGroupWithOnlyMember and userLeaveGroup used method .getUsers();
  * 

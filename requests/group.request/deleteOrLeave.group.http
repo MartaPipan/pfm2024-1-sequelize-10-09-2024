@@ -1,0 +1,1 @@
+DELETE  http://localhost:3000/users/41/groups/31 HTTP/1.1

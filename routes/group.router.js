@@ -4,8 +4,7 @@ const {
     getAllGroupsByUser,
     getGroup, 
     addUserToGroup,
-    deleteGroupWithOnlyMember,
-    userLeaveGroup
+    deleteOrLeaveGroup
 } = require('../controllers/group.controller');
 
 const { checkGroup } = require('../middlewares/group.mw');
@@ -18,7 +17,7 @@ groupRouter.get('/', getAllGroupsByUser);
 
 groupRouter.get('/:groupId', getGroup);
 groupRouter.post('/:groupId', checkGroup, addUserToGroup);
-groupRouter.delete('/:groupId', checkGroup, deleteGroupWithOnlyMember);
-groupRouter.patch('/:groupId', checkGroup, userLeaveGroup);// PATCH,дозволяє показати, що змінює стан ресурсу(членства в групі),уникаєте конфлікту з існуючим методом DELETE, який видаляє групу.
+groupRouter.delete('/:groupId', checkGroup, deleteOrLeaveGroup);
+
 
 module.exports = groupRouter; 
