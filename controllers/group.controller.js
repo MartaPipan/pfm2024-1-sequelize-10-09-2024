@@ -1,6 +1,7 @@
 const createError = require('http-errors');
 const _ = require('lodash');
 const { Group, User } = require('../models');
+const { th } = require('date-fns/locale');
 const attributes = [
     'name',
     'imagePath',
@@ -25,6 +26,7 @@ module.exports.getAllGroupsByUser = async (req, res, next) => {
     try {
         const { userInstance } = req;
         const groups = await userInstance.getGroups();
+
         if (groups.length === 0) {
             return res.status(200).send({
                 message: 'User does not belong to any groups.',
@@ -39,16 +41,28 @@ module.exports.getAllGroupsByUser = async (req, res, next) => {
 
 module.exports.getGroup = async (req, res, next) => {
     try {
-        const { groupInstance } = req;
-        if (!groupInstance) {
-            return next(createError(404, 'Group not found.'));
+        const { userInstance, params: { groupId } } = req;
+        const [group] = await userInstance.getGroups({
+            through: {
+                where: { groupId: groupId },
+            },
+        });
+        
+        if(!group) {
+            return next(createError(404, 'Group does not exists for this user'));
         }
-        res.status(200).send({ data: groupInstance });
+        group.dataValues.users_to_groups = undefined;    //not send users_to_groups in response
+        res.status(200).send({ data: group });
     } catch (error) {
         next(error);
     }
-}; 
-
+};
+/**erro na aula ====>>>>> 1h15min
+ * 
+ * const group = await userInstance.getGroups({
+    through: { where: { id: groupId } },
+});
+Тут through: { where: { id: groupId } } намагається фільтрувати дані у таблиці асоціації (users_to_groups), але поле id належить таблиці Group, а не users_to_groups. Через це фільтрація виконується неправильно, і метод повертає всі групи користувача, ігноруючи переданий groupId. */
 
 
 module.exports.deleteGroup = async (req, res, next) => {
