@@ -8,6 +8,8 @@ app.use(express.json());
 
 //router
 app.use('/', router);
+// if we have admin panel
+// app.use('/admin', adminRouter);
 
 //handlerError
 app.use(handlerErrors);

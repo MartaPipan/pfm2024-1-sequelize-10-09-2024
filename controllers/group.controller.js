@@ -1,7 +1,7 @@
 const createError = require('http-errors');
 const _ = require('lodash');
-const { Group, User } = require('../models');
-const { th } = require('date-fns/locale');
+const { User, Group } = require('../models');
+
 const attributes = [
     'name',
     'imagePath',
@@ -39,7 +39,49 @@ module.exports.getAllGroupsByUser = async (req, res, next) => {
     }
 };
 
+//дістати юзерів з групи за допомогою методу findByPk властивість include--->>>(option.incluide[].model)
 module.exports.getGroup = async (req, res, next) => {
+    try {
+        const { userInstance, params: { groupId } } = req;
+        const group = await Group.findByPk(groupId, {
+            include: [
+                {
+                    model: User,
+                    attributes: ['id', 'firstName', 'lastName', 'email'],
+                    through: { attributes: [] } //through:{ attributes:[]}->>incluide поле users_to_groups{attributes:[vazio]}
+                }
+            ]
+        });
+        if (!group) {
+            return next(createError(404, 'Group does not exist for this user'));
+        }
+        res.status(200).send({ data: group });
+    } catch (error) {
+        next(error);
+    }
+};
+
+/**module.exports.getGroup = async (req, res, next) => {
+    try {
+        const { userInstance, params: { groupId } } = req;
+
+        // Пошук групи за ID
+        const [group] = await userInstance.getGroups({
+            where: { id: groupId },
+        });
+        if (!group) {
+            return next(createError(404, 'Group does not exist for this user'));
+        }
+        // Видаляємо поле users_to_groups з відповіді
+        group.dataValues.users_to_groups = undefined;
+
+        res.status(200).send({ data: group });
+    } catch (error) {
+        next(error);
+    }
+};
+*/
+/**module.exports.getGroup = async (req, res, next) => {
     try {
         const { userInstance, params: { groupId } } = req;
         const [group] = await userInstance.getGroups({
@@ -47,7 +89,6 @@ module.exports.getGroup = async (req, res, next) => {
                 where: { groupId: groupId },
             },
         });
-        
         if(!group) {
             return next(createError(404, 'Group does not exists for this user'));
         }
@@ -57,20 +98,30 @@ module.exports.getGroup = async (req, res, next) => {
         next(error);
     }
 };
+*/
 /**erro na aula ====>>>>> 1h15min
- * 
- * const group = await userInstance.getGroups({
+ const group = await userInstance.getGroups({
     through: { where: { id: groupId } },
 });
-Тут through: { where: { id: groupId } } намагається фільтрувати дані у таблиці асоціації (users_to_groups), але поле id належить таблиці Group, а не users_to_groups. Через це фільтрація виконується неправильно, і метод повертає всі групи користувача, ігноруючи переданий groupId. */
+Тут through: { where: { id: groupId } } намагається фільтрувати дані у таблиці асоціації (users_to_groups), але поле id належить таблиці Group, а не users_to_groups. Через це фільтрація виконується неправильно, і метод повертає всі групи користувача, ігноруючи переданий groupId.
+Метод getGroups приймає where на верхньому рівні, а не в through. */
 
-
-module.exports.deleteGroup = async (req, res, next) => {
+module.exports.addUserToGroup = async (req, res, next) => {
     try {
-        const { groupInstance } = req;
-        await groupInstance.destroy();
-        res.status(200).send({ data: groupInstance });
+        const { userInstance, groupInstance, body } = req;
+        if (body.idUser) {
+            const user = await User.findByPk(body.idUser);
+            if (!user) {
+                return next(createError(404, 'User not found'));
+            }
+            await groupInstance.addUser(body.idUser);
+        } else {
+            await groupInstance.addUser(userInstance.id);
+        }
+        res.status(201).send({ data: 'add user to group success' });
     } catch (error) {
         next(error);
     }
-};      
+};
+
+ 
