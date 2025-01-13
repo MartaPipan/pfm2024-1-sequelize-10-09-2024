@@ -14,17 +14,18 @@ const {
 
 const { checkUser } = require('../middlewares/user.mw');
 const { paginate } = require('../middlewares/paginate.mw');
+const { singleUpload } = require('../middlewares/upload.mw');
 
 const userRouter = Router();
 
-userRouter.post('/', createUser);
-userRouter.get('/',paginate, findAllUsers);
+userRouter.post('/', singleUpload('avatar'), createUser);
+userRouter.get('/', paginate, findAllUsers);
 
 userRouter 
   .route('/:userId')
   .all(checkUser)
   .get(findUserByPk)
   .delete(deleteUserByPk)
-  .patch(updateUserByPkInstance);
+  .patch(singleUpload('avatar'), updateUserByPkInstance);
 
 module.exports = userRouter;

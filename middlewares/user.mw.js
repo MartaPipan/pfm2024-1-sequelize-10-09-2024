@@ -8,6 +8,8 @@ module.exports.checkUser = async (req, res, next) => {
         if (!userInstance) {
             return next(createError(404, 'User not found'));    
         }
+        console.log('mw CheckUser: userInstance===>>>>', userInstance);
+        
         req.userInstance = userInstance;
         next();
 } catch (error) {
