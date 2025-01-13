@@ -5,6 +5,7 @@ const { handlerErrors } = require('./handlerErrors');
 const app = express();
 
 app.use(express.json());
+app.use(express.static('public'));
 
 //router
 app.use('/', router);

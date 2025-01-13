@@ -2,13 +2,31 @@ const createError = require('http-errors');
 const _ = require('lodash');
 const { User, Group } = require('../models');
 
-const attributes = [
+const attrs = [
     'name',
     'imagePath',
-    'description',
-    ];
+    'description'];
+
+module.exports.updateGroup = async (req, res, next) => {
+    try {
+        const {
+            groupInstance,file,body} = req;
+
+        let values = _.pick(body, attrs);
+        if (file) {
+            values = { ...values, imagePath: file.filename };    
+        }
+        const updatedGroup = await groupInstance.update(values);
+        
+        res.status(201).send({ data: updatedGroup });  
+    } catch (error) {
+        next(error);
+    }
+};   
+
 module.exports.createGroup = async (req, res, next) => {
     try {
+
         const { body, userInstance } = req;
         const values = _.pick(body, attributes);
         const newGroup = await userInstance.createGroup(values);
