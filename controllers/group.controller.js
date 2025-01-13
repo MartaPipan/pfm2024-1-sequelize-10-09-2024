@@ -2,7 +2,7 @@ const createError = require('http-errors');
 const _ = require('lodash');
 const { User, Group } = require('../models');
 
-const attrs = [
+const attributes = [
     'name',
     'imagePath',
     'description'];
@@ -10,9 +10,9 @@ const attrs = [
 module.exports.updateGroup = async (req, res, next) => {
     try {
         const {
-            groupInstance,file,body} = req;
+            groupInstance, file, body} = req;
 
-        let values = _.pick(body, attrs);
+        let values = _.pick(body, attributes);
         if (file) {
             values = { ...values, imagePath: file.filename };    
         }
@@ -26,9 +26,11 @@ module.exports.updateGroup = async (req, res, next) => {
 
 module.exports.createGroup = async (req, res, next) => {
     try {
-
-        const { body, userInstance } = req;
-        const values = _.pick(body, attributes);
+        const { userInstance, file, body} = req;
+        let values = _.pick(body, attributes);
+        if (file) {
+            values = { ...values, imagePath: file.filename };
+        }
         const newGroup = await userInstance.createGroup(values);
         if (!newGroup) {
             return next(createError(400, 'Group could not be created.'));
