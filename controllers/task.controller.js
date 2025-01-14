@@ -1,5 +1,8 @@
 const createError = require('http-errors'); 
-const_ = require('lodash');
+const _ = require('lodash');
+const { Task } = require('../models');
+const LimitTasksError = require('../errors/LimitTasksError');
+
 
 const attributes = [
   'content',
@@ -12,6 +15,10 @@ module.exports.createTask = async (req, res, next) => {
   try {
     const { body, userInstance } = req;
     const values = _.pick(body, attributes);
+    const amount = await userInstance.countTasks();
+    if (amount >= 10) {
+      return next(new LimitTasksError('The user has reached the maximum number of tasks.'));
+    }
     const newTask = await userInstance.createTask(values);// ->doc.API->Model->magic method createChild
      if (!newTask) {
   return next(createError(400, 'Task could not be created.'));
