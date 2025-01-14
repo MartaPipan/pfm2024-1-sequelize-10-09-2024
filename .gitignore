@@ -1,8 +1,10 @@
 .*
 !.gitignore
+!.sequelizerc
 
 /node_modules/
 
 create.sql
 
 /public/** 
+sequelize-*

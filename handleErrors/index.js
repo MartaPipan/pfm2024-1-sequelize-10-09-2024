@@ -5,7 +5,7 @@ const ApplicationError = require("../errors/ApplicationError");
 module.exports.handleErrors = (err, req, res, next) => {
     console.log('---in handlerError--->>>', err);
     if (err instanceof UniqueConstraintError) {
-        return res.status(400).send({
+        return res.status(409).send({
             errors: [{detail: 'User with this email already exists'}],
         });
     }if (err instanceof ValidationError) {
